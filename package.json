@@ -1,0 +1,26 @@
+{
+  "name": "job-board",
+  "version": "1.0.0",
+  "description": "CS361 Portfolio Project through Oregon State University",
+  "homepage": "https://github.com/popcornMJ/job-board#readme",
+  "bugs": {
+    "url": "https://github.com/popcornMJ/job-board/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popcornMJ/job-board.git"
+  },
+  "license": "ISC",
+  "author": "Meredith Baker",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3",
+    "handlebars": "^4.7.8",
+    "save": "^2.9.0"
+  }
+}
