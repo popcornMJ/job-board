@@ -20,6 +20,11 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+// route to jobs page
+app.get('/jobs', function(req, res) {
+    res.render('jobs');
+});
+
 // start server
 app.listen(PORT, () => {
     console.log('Job Board running on port ${PORT}');
