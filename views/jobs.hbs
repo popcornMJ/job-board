@@ -20,6 +20,51 @@
     <main class="center-content">
         <h2>Available Jobs Posted Here</h2>
         <p>Below, you may browse jobs that have been posted by employers looking for new talent.</p>
+
+        <section class="add-job">
+            <h3>Add New Job</h3>
+            <form action="/jobs/add" method="POST" class="job-form">
+                <label for="title">Job Title:</label><br>
+                <input type="text" id="title" name="title" required><br><br>
+
+                <label for="body">Description:</label><br>
+                <textarea id="body" name="body" rows="4" required></textarea><br><br>
+
+                <button type="submit">Add Job</button>
+            </form>
+        </section>
+
+        <section class="job-list">
+            <h3>Current Available Jobs</h3>
+            
+             {{#if jobs.length}}
+                <ul class="jobs">
+                    {{#each jobs}}
+                        <li class="job-item">
+                            <h4>{{this.title}}</h4>
+                            <p>{{this.body}}</p>
+
+                            <div class="job-actions">
+                                <!-- Delete form -->
+                                <form action="/jobs/delete/{{this.job_id}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+
+                                <!-- Update form -->
+                                <form action="/jobs/update/{{this.job_id}}" method="POST" style="display:inline;">
+                                    <input type="text" name="title" value="{{this.title}}" required>
+                                    <input type="text" name="body" value="{{this.body}}" required>
+                                    <button type="submit" class="update-btn">Update</button>
+                                </form>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p>No jobs available yet. Add one above!</p>
+            {{/if}}
+        </section>
+
     </main>
     
 </body>
