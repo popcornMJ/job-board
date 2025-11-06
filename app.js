@@ -37,6 +37,36 @@ app.get('/jobs', function(req, res) {
     });
 });
 
+// file upload middleware
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const upload = multer({ dest: 'uploads/'});
+
+// route for file uploads
+app.post('/jobs/upload', upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error', err);
+            return res.status(500).send('File error');
+        }
+
+        const lines = data.split('\n').filter(line => line.trim() !== '');
+        for (const line of lines) {
+            const [title, ...bodyParts] = line.split(':');
+            const body = bodyParts.join(':').trim();
+            if (title && body) {
+                db.pool.query('INSERT INTO jobs (title, body) VALUES (?, ?)', [title.trim(), body]);
+            }
+        }
+
+        // delete the temporary file after
+        fs.unlink(filePath, () => {});
+        res.redirect('/jobs');
+    });
+});
 
 // parser for incoming HTTP reqs
 const bodyParser = require('body-parser');
