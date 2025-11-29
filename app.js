@@ -1,5 +1,6 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // init app
 const app = express();
@@ -19,8 +20,27 @@ app.set('views', './views');
 const db = require('./db-connector');
 
 // route to home page
-app.get('/', function(req, res) {
-    res.render('index');
+app.get('/', async function(req, res) {
+    try {
+        const viewResult = await fetch("http://localhost:5001/");
+        const viewData = await viewResult.json();
+        const locationResult = await fetch("http://localhost:5001/location");
+        const locationData = await locationResult.json();
+    
+        // hbs
+        res.render('index', {
+            view_count: viewData.view_count,
+            country: locationData.country,
+            region: locationData.region
+        });
+    } catch (err) {
+        console.error("Page analytics not working", err);
+        res.render('index', {
+            view_count: "N/A",
+            country: "N/A",
+            region: "N/A"
+        });
+    }
 });
 
 // route to jobs page
@@ -35,6 +55,24 @@ app.get('/jobs', function(req, res) {
             res.render('jobs', { jobs: results });
         }
     });
+});
+
+// route to user profile and fetch microservice
+app.get('/profile', async (req, res) => {
+    try {
+        const email = "liam.benn@example.com";
+        const response = await fetch(`http://localhost:8000/user?email=${email}`);
+        const userData = await response.json();
+
+        console.log("Fetched user data:", userData);
+
+        const user = userData ? JSON.parse(JSON.stringify(userData)) : null;
+
+        res.render('profile', { user });
+    } catch (err) {
+        console.error("User profile fetch invalid", err);
+        res.render('profile', { user: null });
+    }
 });
 
 // file upload middleware
